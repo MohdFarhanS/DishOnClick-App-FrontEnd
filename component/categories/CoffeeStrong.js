@@ -1,43 +1,61 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React, {useCallback} from "react";
+import { useNavigation } from "@react-navigation/native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
-const CoffeeStrong = ({ searchQuery = '' }) => {
+const CoffeeStrong = ({ searchQuery = "" }) => {
+  const navigation = useNavigation();
+
   const products = [
     {
-      id: 'strong_1',
-      name: 'Mead Raff',
-      description: 'With Sugar',
+      id: "strong_1",
+      name: "Mead Raff",
+      description: "With Sugar",
       price: 50000,
       image: require("../../assets/meadRaff.png"),
+      details:
+        "Mead Raff kami menghadirkan pengalaman kopi yang kuat dan berkarakter. Dibuat dari biji kopi pilihan yang dipanggang sempurna, menghasilkan rasa kopi yang bold dengan sentuhan caramel subtle.",
     },
     {
-      id: 'strong_2',
-      name: 'Dish Coffee',
-      description: 'With Sugar',
+      id: "strong_2",
+      name: "Dish Coffee",
+      description: "With Sugar",
       price: 20000,
       image: require("../../assets/dishCoffee.png"),
+      details:
+        "Dish Coffee kami merupakan pilihan tepat bagi pecinta kopi dengan karakter kuat. Racikan khusus dari biji kopi premium menghasilkan rasa yang kaya dengan afterstaste yang panjang.",
     },
     {
-      id: 'strong_3',
-      name: 'Turkish Coffee',
-      description: 'With Sugar',
+      id: "strong_3",
+      name: "Turkish Coffee",
+      description: "With Sugar",
       price: 90000,
       image: require("../../assets/turkishCoffee.png"),
+      details:
+        "Turkish Coffee kami disajikan dengan metode tradisional Turki, menghasilkan seduhan kopi yang sangat kental dan kaya rasa. Pengalaman otentik dengan aroma yang kuat dan karakter rasa yang tidak terlupakan.",
     },
     {
-      id: 'strong_4',
-      name: 'Americano',
-      description: 'With Sugar',
+      id: "strong_4",
+      name: "Americano",
+      description: "With Sugar",
       price: 25000,
       image: require("../../assets/americano.png"),
+      details:
+        "Americano kami menawarkan kesempurnaan dalam kesederhanaan. Espresso premium yang dipadukan dengan air panas, menciptakan secangkir kopi yang kuat namun smooth dengan karakter rasa yang kompleks.",
     },
   ];
 
+  const handleAddToCart = useCallback((product) => {
+    navigation.navigate("Order", { screen: "OrderMain", params: { product } });
+  }, [navigation]);
+  
+  
+
   // Filter products based on search query
   const filteredProducts = searchQuery
-    ? products.filter(product => 
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
+    ? products.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.description.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : products;
 
@@ -51,18 +69,29 @@ const CoffeeStrong = ({ searchQuery = '' }) => {
                 source={filteredProducts[0].image}
                 style={styles.maskGroup}
               />
-              <Text style={styles.textWrapper6}>{filteredProducts[0].name}</Text>
-              <Text style={styles.textWrapper7}>{filteredProducts[0].description}</Text>
+              <Text style={styles.textWrapper6}>
+                {filteredProducts[0].name}
+              </Text>
+              <Text style={styles.textWrapper7}>
+                {filteredProducts[0].description}
+              </Text>
               <View style={styles.idr}>
                 <View style={styles.overlapGroup2}>
-                  <Text style={styles.textWrapper8}>{filteredProducts[0].price.toLocaleString()}</Text>
+                  <Text style={styles.textWrapper8}>
+                    {filteredProducts[0].price.toLocaleString()}
+                  </Text>
                   <Text style={styles.textWrapper9}>Rp</Text>
                 </View>
               </View>
-              <Image
-                source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                style={styles.akarIconsCircle}
-              />
+              <TouchableOpacity
+                onPress={() => handleAddToCart(filteredProducts[0])}
+                style={styles.plusIconContainer}
+              >
+                <Image
+                  source={require("../../icons/akar-icons-circle-plus-fill.png")}
+                  style={styles.akarIconsCircle}
+                />
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -73,18 +102,29 @@ const CoffeeStrong = ({ searchQuery = '' }) => {
                   source={filteredProducts[1].image}
                   style={styles.maskGroup4}
                 />
-                <Text style={styles.textWrapper6}>{filteredProducts[1].name}</Text>
-                <Text style={styles.textWrapper7}>{filteredProducts[1].description}</Text>
+                <Text style={styles.textWrapper6}>
+                  {filteredProducts[1].name}
+                </Text>
+                <Text style={styles.textWrapper7}>
+                  {filteredProducts[1].description}
+                </Text>
                 <View style={styles.idr}>
                   <View style={styles.overlapGroup2}>
-                    <Text style={styles.textWrapper8}>{filteredProducts[1].price.toLocaleString()}</Text>
+                    <Text style={styles.textWrapper8}>
+                      {filteredProducts[1].price.toLocaleString()}
+                    </Text>
                     <Text style={styles.textWrapper9}>Rp</Text>
                   </View>
                 </View>
-                <Image
-                  source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                  style={styles.akarIconsCircle}
-                />
+                <TouchableOpacity
+                  onPress={() => handleAddToCart(filteredProducts[1])}
+                  style={styles.plusIconContainer}
+                >
+                  <Image
+                    source={require("../../icons/akar-icons-circle-plus-fill.png")}
+                    style={styles.akarIconsCircle}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -96,18 +136,29 @@ const CoffeeStrong = ({ searchQuery = '' }) => {
                   source={filteredProducts[2].image}
                   style={styles.maskGroup2}
                 />
-                <Text style={styles.textWrapper11}>{filteredProducts[2].name}</Text>
-                <Text style={styles.textWrapper12}>{filteredProducts[2].description}</Text>
+                <Text style={styles.textWrapper11}>
+                  {filteredProducts[2].name}
+                </Text>
+                <Text style={styles.textWrapper12}>
+                  {filteredProducts[2].description}
+                </Text>
                 <View style={styles.idr2}>
                   <View style={styles.overlapGroup3}>
-                    <Text style={styles.textWrapper8}>{filteredProducts[2].price.toLocaleString()}</Text>
+                    <Text style={styles.textWrapper8}>
+                      {filteredProducts[2].price.toLocaleString()}
+                    </Text>
                     <Text style={styles.textWrapper13}>Rp</Text>
                   </View>
                 </View>
-                <Image
-                  source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                  style={styles.akarIconsCircle2}
-                />
+                <TouchableOpacity
+                  onPress={() => handleAddToCart(filteredProducts[2])}
+                  style={styles.plusIconContainer}
+                >
+                  <Image
+                    source={require("../../icons/akar-icons-circle-plus-fill.png")}
+                    style={styles.akarIconsCircle2}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -119,18 +170,29 @@ const CoffeeStrong = ({ searchQuery = '' }) => {
                   source={filteredProducts[3].image}
                   style={styles.maskGroup3}
                 />
-                <Text style={styles.textWrapper14}>{filteredProducts[3].name}</Text>
-                <Text style={styles.textWrapper15}>{filteredProducts[3].description}</Text>
+                <Text style={styles.textWrapper14}>
+                  {filteredProducts[3].name}
+                </Text>
+                <Text style={styles.textWrapper15}>
+                  {filteredProducts[3].description}
+                </Text>
                 <View style={styles.idr3}>
                   <View style={styles.overlapGroup4}>
-                    <Text style={styles.textWrapper16}>{filteredProducts[3].price.toLocaleString()}</Text>
+                    <Text style={styles.textWrapper16}>
+                      {filteredProducts[3].price.toLocaleString()}
+                    </Text>
                     <Text style={styles.textWrapper13}>Rp</Text>
                   </View>
                 </View>
-                <Image
-                  source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                  style={styles.akarIconsCircle3}
-                />
+                <TouchableOpacity
+                  onPress={() => handleAddToCart(filteredProducts[3])}
+                  style={styles.plusIconContainer}
+                >
+                  <Image
+                    source={require("../../icons/akar-icons-circle-plus-fill.png")}
+                    style={styles.akarIconsCircle3}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -179,9 +241,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 20,
     shadowColor: "#000000",
-    shadowOffset: { 
-      width: 0, 
-      height: 4 
+    shadowOffset: {
+      width: 0,
+      height: 4,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -397,7 +459,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 149,
     width: 38,
-  }
+  },
 });
 
 export default CoffeeStrong;

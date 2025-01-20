@@ -1,5 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
 
 import HomeScreen from "../pages/homeScreen";
@@ -8,6 +9,16 @@ import VoucherScreen from "../pages/voucherScreen";
 import SettingScreen from "../pages/settingScreen";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator(); // Tambahkan ini
+
+const OrderStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="OrderMain" component={OrderScreen} />
+      {/* Tambahkan screen lain yang terkait dengan Order di sini */}
+    </Stack.Navigator>
+  );
+};
 
 const AppNavigator = () => {
   return (
@@ -75,7 +86,7 @@ const AppNavigator = () => {
       />
       <Tab.Screen
         name="Order"
-        component={OrderScreen}
+        component={OrderStack}
         options={{ 
           tabBarLabel: "Order",
         tabBarStyle: {

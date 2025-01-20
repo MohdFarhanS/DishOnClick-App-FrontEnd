@@ -10,21 +10,30 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-const OrderScreen = ({ navigation }) => {
+const OrderScreen = ({ navigation, route }) => {
+  const product = route.params?.product || {
+    price: 0,
+    name: '',
+    description: '',
+    details: '',
+    image: null
+  };
   const [cupSize, setCupSize] = useState("Small");
   const [sugarLevel, setSugarLevel] = useState("No Sugar");
-  const [quantity, setQuantity] = useState(2);
+  const [quantity, setQuantity] = useState(1);
 
   const sizes = ["Small", "Medium", "Large"];
   const sugarLevels = ["No Sugar", "Low", "Medium"];
 
+  const totalPrice = product.price * quantity;
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={require("../assets/mrBesar.png")} style={styles.image} />
-        <TouchableOpacity 
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}
+        <Image source={product.image} style={styles.image} />
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
         >
           <Ionicons name="chevron-back" size={24} color="white" />
         </TouchableOpacity>
@@ -40,8 +49,8 @@ const OrderScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollViewContent}
         >
           <View style={styles.contentContainer}>
-            <Text style={styles.title}>Mead Raff</Text>
-            <Text style={styles.subtitle}>less Sugar</Text>
+            <Text style={styles.title}>{product.name}</Text>
+            <Text style={styles.subtitle}>{product.description}</Text>
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Cup Size</Text>
@@ -111,29 +120,23 @@ const OrderScreen = ({ navigation }) => {
 
             <View style={styles.detailsContainer}>
               <Text style={styles.sectionTitle}>Details</Text>
-              <Text style={styles.detailsText}>
-                Nikmati keangungan sederhana dalam setiap tegukan Americano
-                kami. Kopi arabika pilihan berkualitas tinggi diseduh dengan
-                sempurna untuk menghasilkan cita rasa kaya dan sedikit asam yang
-                menyegarkan. Sempurna untuk memulai harimu atau menemani
-                saat-saat santai.
-              </Text>
+              <Text style={styles.detailsText}>{product.details}</Text>
             </View>
 
-            {/* Added padding at bottom for better scrolling */}
             <View style={styles.bottomPadding} />
           </View>
         </ScrollView>
 
-        {/* Add to cart button outside ScrollView to keep it fixed */}
         <View style={styles.addToCartContainer}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.addToCartButton}
-              onPress={() => navigation.navigate("OrderSummary")}
-              >
+            onPress={() => navigation.navigate("OrderSummary")}
+          >
             <Text style={styles.addToCartText}>Add to cart</Text>
             <View style={styles.divider} />
-            <Text style={styles.addToCartPrice}>Rp 50.000</Text>
+            <Text style={styles.addToCartPrice}>
+              Rp {totalPrice.toLocaleString()}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -267,25 +270,25 @@ const styles = StyleSheet.create({
     height: 20,
   },
   addToCartContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     paddingHorizontal: 15,
     paddingVertical: 10,
-    borderTopColor: '#F0F0F0',
+    borderTopColor: "#F0F0F0",
     top: 490,
   },
   addToCartButton: {
     flexDirection: "row",
     backgroundColor: "#8B4513",
     borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 15,
     paddingHorizontal: 20,
-    width: '100%'
+    width: "100%",
   },
   addToCartText: {
     color: "white",
@@ -301,8 +304,8 @@ const styles = StyleSheet.create({
   },
   divider: {
     width: 1,
-    height: '100%',
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    height: "100%",
+    backgroundColor: "rgba(255,255,255,0.2)",
   },
 });
 

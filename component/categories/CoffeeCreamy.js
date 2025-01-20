@@ -1,43 +1,59 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React, { useCallback } from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const CoffeeCreamy = ({ searchQuery = '' }) => {
+const CoffeeCreamy = ({ searchQuery = "" }) => {
+  const navigation = useNavigation();
+
   const products = [
     {
-      id: 'creamy_1',
-      name: 'Cappucchino',
-      description: 'With Sugar',
+      id: "creamy_1",
+      name: "Cappucchino",
+      description: "With Sugar",
       price: 35000,
       image: require("../../assets/cappucchino.png"),
+      details:
+        "Nikmati kelembutan sempurna dalam setiap tegukan Cappuccino kami. Perpaduan espresso kuat dengan busa susu yang creamy dan lembut, menciptakan harmoni rasa yang memanjakan lidah. Sempurna untuk memulai hari atau menikmati sore yang santai.",
     },
     {
-      id: 'creamy_2',
-      name: 'Java Coffee',
-      description: 'With Sugar',
+      id: "creamy_2",
+      name: "Java Coffee",
+      description: "With Sugar",
       price: 35000,
       image: require("../../assets/javaCoffee.png"),
+      details:
+        "Java Coffee kami menghadirkan cita rasa authentic dari tanah Jawa. Dipetik dan diolah dengan hati-hati untuk memberikan pengalaman kopi yang tak terlupakan. Tekstur creamy dan rasa yang seimbang menjadikannya pilihan sempurna.",
     },
     {
-      id: 'creamy_3',
-      name: 'Maxican Coffee',
-      description: 'With Sugar',
+      id: "creamy_3",
+      name: "Maxican Coffee",
+      description: "With Sugar",
       price: 35000,
       image: require("../../assets/maxicanCoffee.png"),
+      details:
+        "Mexican Coffee kami menawarkan sensasi unik dengan sentuhan rempah khas Meksiko. Paduan kopi arabika premium dengan sentuhan kayu manis dan sedikit vanilla menciptakan pengalaman minum kopi yang eksotis.",
     },
     {
-      id: 'creamy_4',
-      name: 'Macchiato',
-      description: 'With Sugar',
+      id: "creamy_4",
+      name: "Macchiato",
+      description: "With Sugar",
       price: 25000,
       image: require("../../assets/macchiato.png"),
+      details:
+        "Macchiato kami menghadirkan perpaduan sempurna antara espresso kuat dan lapisan susu yang lembut. Dengan takaran yang tepat, menciptakan keseimbangan rasa yang sempurna antara kekuatan kopi dan kelembutan susu.",
     },
   ];
 
+  const handleAddToCart = useCallback((product) => {
+    navigation.navigate("Order", { screen: "OrderMain", params: { product } });
+  }, [navigation]);
+    
   // Filter products based on search query
   const filteredProducts = searchQuery
-    ? products.filter(product => 
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
+    ? products.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.description.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : products;
 
@@ -51,18 +67,29 @@ const CoffeeCreamy = ({ searchQuery = '' }) => {
                 source={filteredProducts[0].image}
                 style={styles.maskGroup}
               />
-              <Text style={styles.textWrapper6}>{filteredProducts[0].name}</Text>
-              <Text style={styles.textWrapper7}>{filteredProducts[0].description}</Text>
+              <Text style={styles.textWrapper6}>
+                {filteredProducts[0].name}
+              </Text>
+              <Text style={styles.textWrapper7}>
+                {filteredProducts[0].description}
+              </Text>
               <View style={styles.idr}>
                 <View style={styles.overlapGroup2}>
-                  <Text style={styles.textWrapper8}>{filteredProducts[0].price.toLocaleString()}</Text>
+                  <Text style={styles.textWrapper8}>
+                    {filteredProducts[0].price.toLocaleString()}
+                  </Text>
                   <Text style={styles.textWrapper9}>Rp</Text>
                 </View>
               </View>
-              <Image
-                source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                style={styles.akarIconsCircle}
-              />
+              <TouchableOpacity
+                onPress={() => handleAddToCart(filteredProducts[0])}
+                style={styles.plusIconContainer}
+              >
+                <Image
+                  source={require("../../icons/akar-icons-circle-plus-fill.png")}
+                  style={styles.akarIconsCircle}
+                />
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -73,18 +100,29 @@ const CoffeeCreamy = ({ searchQuery = '' }) => {
                   source={filteredProducts[1].image}
                   style={styles.maskGroup4}
                 />
-                <Text style={styles.textWrapper6}>{filteredProducts[1].name}</Text>
-                <Text style={styles.textWrapper7}>{filteredProducts[1].description}</Text>
+                <Text style={styles.textWrapper6}>
+                  {filteredProducts[1].name}
+                </Text>
+                <Text style={styles.textWrapper7}>
+                  {filteredProducts[1].description}
+                </Text>
                 <View style={styles.idr}>
                   <View style={styles.overlapGroup2}>
-                    <Text style={styles.textWrapper8}>{filteredProducts[1].price.toLocaleString()}</Text>
+                    <Text style={styles.textWrapper8}>
+                      {filteredProducts[1].price.toLocaleString()}
+                    </Text>
                     <Text style={styles.textWrapper9}>Rp</Text>
                   </View>
                 </View>
-                <Image
-                  source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                  style={styles.akarIconsCircle}
-                />
+                <TouchableOpacity
+                  onPress={() => handleAddToCart(filteredProducts[1])}
+                  style={styles.plusIconContainer}
+                >
+                  <Image
+                    source={require("../../icons/akar-icons-circle-plus-fill.png")}
+                    style={styles.akarIconsCircle}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -96,18 +134,29 @@ const CoffeeCreamy = ({ searchQuery = '' }) => {
                   source={filteredProducts[2].image}
                   style={styles.maskGroup2}
                 />
-                <Text style={styles.textWrapper11}>{filteredProducts[2].name}</Text>
-                <Text style={styles.textWrapper12}>{filteredProducts[2].description}</Text>
+                <Text style={styles.textWrapper11}>
+                  {filteredProducts[2].name}
+                </Text>
+                <Text style={styles.textWrapper12}>
+                  {filteredProducts[2].description}
+                </Text>
                 <View style={styles.idr2}>
                   <View style={styles.overlapGroup3}>
-                    <Text style={styles.textWrapper8}>{filteredProducts[2].price.toLocaleString()}</Text>
+                    <Text style={styles.textWrapper8}>
+                      {filteredProducts[2].price.toLocaleString()}
+                    </Text>
                     <Text style={styles.textWrapper13}>Rp</Text>
                   </View>
                 </View>
-                <Image
-                  source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                  style={styles.akarIconsCircle2}
-                />
+                <TouchableOpacity
+                  onPress={() => handleAddToCart(filteredProducts[2])}
+                  style={styles.plusIconContainer}
+                >
+                  <Image
+                    source={require("../../icons/akar-icons-circle-plus-fill.png")}
+                    style={styles.akarIconsCircle2}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -119,18 +168,29 @@ const CoffeeCreamy = ({ searchQuery = '' }) => {
                   source={filteredProducts[3].image}
                   style={styles.maskGroup3}
                 />
-                <Text style={styles.textWrapper14}>{filteredProducts[3].name}</Text>
-                <Text style={styles.textWrapper15}>{filteredProducts[3].description}</Text>
+                <Text style={styles.textWrapper14}>
+                  {filteredProducts[3].name}
+                </Text>
+                <Text style={styles.textWrapper15}>
+                  {filteredProducts[3].description}
+                </Text>
                 <View style={styles.idr3}>
                   <View style={styles.overlapGroup4}>
-                    <Text style={styles.textWrapper16}>{filteredProducts[3].price.toLocaleString()}</Text>
+                    <Text style={styles.textWrapper16}>
+                      {filteredProducts[3].price.toLocaleString()}
+                    </Text>
                     <Text style={styles.textWrapper13}>Rp</Text>
                   </View>
                 </View>
+                <TouchableOpacity
+                  onPress={() => handleAddToCart(filteredProducts[3])}
+                  style={styles.plusIconContainer}
+                >
                 <Image
                   source={require("../../icons/akar-icons-circle-plus-fill.png")}
                   style={styles.akarIconsCircle3}
                 />
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -147,6 +207,7 @@ const styles = StyleSheet.create({
     right: 0,
     height: 45,
   },
+  
   product: {
     height: 208,
     left: 17,
@@ -179,9 +240,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 20,
     shadowColor: "#000000",
-    shadowOffset: { 
-      width: 0, 
-      height: 4 
+    shadowOffset: {
+      width: 0,
+      height: 4,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -397,7 +458,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 149,
     width: 38,
-  }
+  },
 });
 
 export default CoffeeCreamy;

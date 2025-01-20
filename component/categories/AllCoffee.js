@@ -1,53 +1,68 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import React, {useCallback} from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
-const AllCoffee = ({ searchQuery= '' }) => {
+const AllCoffee = ({ searchQuery = "" }) => {
+  const navigation = useNavigation();
+
   const products = [
     {
-      id: 'all_1',
-      name: 'Mead Raff',
-      description: 'With Sugar',
+      id: "all_1",
+      name: "Mead Raff",
+      description: "With Sugar",
       price: 50000,
       image: require("../../assets/meadRaff.png"),
-      type: 'regular'
+      type: "regular",
+      details:
+        "Nikmati keanggunan sederhana dalam setiap tegukan Mead Raff kami. Kopi arabika pilihan berkualitas tinggi diseduh dengan sempurna untuk menghasilkan cita rasa kaya dan sedikit asam yang menyegarkan. Sempurna untuk memulai harimu atau menemani saat-saat santai.",
     },
     {
-      id: 'all_2',
-      name: 'Java Coffee',
-      description: 'With Sugar',
+      id: "all_2",
+      name: "Java Coffee",
+      description: "With Sugar",
       price: 35000,
       image: require("../../assets/javaCoffee.png"),
-      type: 'regular'
+      type: "regular",
+      details:
+        "Java Coffee kami menghadirkan cita rasa authentic dari tanah Jawa. Dipetik dan diolah dengan hati-hati untuk memberikan pengalaman kopi yang tak terlupakan.",
     },
     {
-      id: 'all_3',
-      name: 'Turkish Coffee',
-      description: 'With Sugar',
+      id: "all_3",
+      name: "Turkish Coffee",
+      description: "With Sugar",
       price: 35000,
       image: require("../../assets/turkishCoffee.png"),
-      type: 'special'
+      type: "special",
+      details:
+        "Rasakan pengalaman kopi khas Turki dengan metode penyeduhan tradisional. Kopi yang kental dengan aroma yang kuat akan membawa Anda dalam perjalanan rasa yang eksotis.",
     },
     {
-      id: 'all_4',
-      name: 'Dish Ice Cream',
-      description: 'With Sugar',
+      id: "all_4",
+      name: "Dish Ice Cream",
+      description: "With Sugar",
       price: 20000,
       image: require("../../assets/dishIceCream.png"),
-      type: 'special'
+      type: "special",
+      details:
+        "Es krim lembut dengan pilihan topping yang menarik. Paduan sempurna antara krim segar dan rasa manis yang seimbang.",
     },
   ];
 
-  
+  const handleAddToCart = useCallback((product) => {
+    navigation.navigate("Order", { screen: "OrderMain", params: { product } });
+  }, [navigation]);
+
   const filteredProducts = searchQuery
-  ? products.filter(product => 
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchQuery.toLowerCase())
-  )
-  : products;
-  
-  const specialProducts = filteredProducts.filter(p => p.type === 'special');
-  const regularProducts = filteredProducts.filter(p => p.type === 'regular');
-  
+    ? products.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : products;
+
+  const specialProducts = filteredProducts.filter((p) => p.type === "special");
+  const regularProducts = filteredProducts.filter((p) => p.type === "regular");
+
   return (
     <View style={styles.categoriesContainer}>
       {regularProducts.length > 0 && (
@@ -59,17 +74,27 @@ const AllCoffee = ({ searchQuery= '' }) => {
                 style={styles.maskGroup}
               />
               <Text style={styles.textWrapper6}>{regularProducts[0].name}</Text>
-              <Text style={styles.textWrapper7}>{regularProducts[0].description}</Text>
+              <Text style={styles.textWrapper7}>
+                {regularProducts[0].description}
+              </Text>
               <View style={styles.idr}>
                 <View style={styles.overlapGroup2}>
-                  <Text style={styles.textWrapper8}>{regularProducts[0].price.toLocaleString()}</Text>
+                  <Text style={styles.textWrapper8}>
+                    {regularProducts[0].price.toLocaleString()}
+                  </Text>
                   <Text style={styles.textWrapper9}>Rp</Text>
                 </View>
               </View>
-              <Image
-                source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                style={styles.akarIconsCircle}
-              />
+              {/* Tambahkan TouchableOpacity untuk ikon plus */}
+              <TouchableOpacity
+                onPress={() => handleAddToCart(regularProducts[0])}
+                style={styles.plusIconContainer}
+              >
+                <Image
+                  source={require("../../icons/akar-icons-circle-plus-fill.png")}
+                  style={styles.akarIconsCircle}
+                />
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -80,18 +105,30 @@ const AllCoffee = ({ searchQuery= '' }) => {
                   source={regularProducts[1].image}
                   style={styles.maskGroup4}
                 />
-                <Text style={styles.textWrapper6}>{regularProducts[1].name}</Text>
-                <Text style={styles.textWrapper7}>{regularProducts[1].description}</Text>
+                <Text style={styles.textWrapper6}>
+                  {regularProducts[1].name}
+                </Text>
+                <Text style={styles.textWrapper7}>
+                  {regularProducts[1].description}
+                </Text>
                 <View style={styles.idr}>
                   <View style={styles.overlapGroup2}>
-                    <Text style={styles.textWrapper8}>{regularProducts[1].price.toLocaleString()}</Text>
+                    <Text style={styles.textWrapper8}>
+                      {regularProducts[1].price.toLocaleString()}
+                    </Text>
                     <Text style={styles.textWrapper9}>Rp</Text>
                   </View>
                 </View>
-                <Image
-                  source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                  style={styles.akarIconsCircle}
-                />
+                {/* Tambahkan TouchableOpacity untuk ikon plus */}
+                <TouchableOpacity
+                  onPress={() => handleAddToCart(regularProducts[1])}
+                  style={styles.plusIconContainer}
+                >
+                  <Image
+                    source={require("../../icons/akar-icons-circle-plus-fill.png")}
+                    style={styles.akarIconsCircle}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -103,7 +140,6 @@ const AllCoffee = ({ searchQuery= '' }) => {
         <Text style={styles.textWrapper10}>Special Coffee</Text>
       )}
 
-      {/* Special Products */}
       {specialProducts.length > 0 && (
         <>
           <View style={styles.product3}>
@@ -112,18 +148,30 @@ const AllCoffee = ({ searchQuery= '' }) => {
                 source={specialProducts[0].image}
                 style={styles.maskGroup2}
               />
-              <Text style={styles.textWrapper11}>{specialProducts[0].name}</Text>
-              <Text style={styles.textWrapper12}>{specialProducts[0].description}</Text>
+              <Text style={styles.textWrapper11}>
+                {specialProducts[0].name}
+              </Text>
+              <Text style={styles.textWrapper12}>
+                {specialProducts[0].description}
+              </Text>
               <View style={styles.idr2}>
                 <View style={styles.overlapGroup3}>
-                  <Text style={styles.textWrapper8}>{specialProducts[0].price.toLocaleString()}</Text>
+                  <Text style={styles.textWrapper8}>
+                    {specialProducts[0].price.toLocaleString()}
+                  </Text>
                   <Text style={styles.textWrapper13}>Rp</Text>
                 </View>
               </View>
-              <Image
-                source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                style={styles.akarIconsCircle2}
-              />
+              {/* Tambahkan TouchableOpacity untuk ikon plus */}
+              <TouchableOpacity
+                onPress={() => handleAddToCart(specialProducts[0])}
+                style={styles.plusIconContainer}
+              >
+                <Image
+                  source={require("../../icons/akar-icons-circle-plus-fill.png")}
+                  style={styles.akarIconsCircle2}
+                />
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -134,25 +182,35 @@ const AllCoffee = ({ searchQuery= '' }) => {
                   source={specialProducts[1].image}
                   style={styles.maskGroup3}
                 />
-                <Text style={styles.textWrapper14}>{specialProducts[1].name}</Text>
-                <Text style={styles.textWrapper15}>{specialProducts[1].description}</Text>
+                <Text style={styles.textWrapper14}>
+                  {specialProducts[1].name}
+                </Text>
+                <Text style={styles.textWrapper15}>
+                  {specialProducts[1].description}
+                </Text>
                 <View style={styles.idr3}>
                   <View style={styles.overlapGroup4}>
-                    <Text style={styles.textWrapper16}>{specialProducts[1].price.toLocaleString()}</Text>
+                    <Text style={styles.textWrapper16}>
+                      {specialProducts[1].price.toLocaleString()}
+                    </Text>
                     <Text style={styles.textWrapper13}>Rp</Text>
                   </View>
                 </View>
-                <Image
-                  source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                  style={styles.akarIconsCircle3}
-                />
+                {/* Tambahkan TouchableOpacity untuk ikon plus */}
+                <TouchableOpacity
+                  onPress={() => handleAddToCart(specialProducts[1])}
+                  style={styles.plusIconContainer}
+                >
+                  <Image
+                    source={require("../../icons/akar-icons-circle-plus-fill.png")}
+                    style={styles.akarIconsCircle3}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
           )}
         </>
       )}
-
-      {/* Show message if no products found */}
     </View>
   );
 };
@@ -163,7 +221,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 45,
-    top: 5
+    top: 5,
   },
   product: {
     height: 208,
@@ -197,9 +255,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 20,
     shadowColor: "#000000",
-    shadowOffset: { 
-      width: 0, 
-      height: 4 
+    shadowOffset: {
+      width: 0,
+      height: 4,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -214,6 +272,8 @@ const styles = StyleSheet.create({
     height: 193,
     position: "relative",
     width: 178,
+    elevation: 8, // Untuk Android
+
   },
   overlap6: {
     backgroundColor: "#ffffff",
@@ -427,12 +487,12 @@ const styles = StyleSheet.create({
     width: 38,
   },
   noResults: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 100,
     fontSize: 16,
-    color: '#666',
+    color: "#666",
     fontFamily: "Montserrat-Regular",
-  }
+  },
 });
 
 export default AllCoffee;
