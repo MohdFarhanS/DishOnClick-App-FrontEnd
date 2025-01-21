@@ -131,6 +131,7 @@ const OrderScreen = ({ navigation, route }) => {
           <TouchableOpacity
             style={styles.addToCartButton}
             onPress={() => navigation.navigate("OrderSummary")}
+            
           >
             <Text style={styles.addToCartText}>Add to cart</Text>
             <View style={styles.divider} />

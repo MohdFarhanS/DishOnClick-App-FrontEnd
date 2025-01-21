@@ -89,7 +89,6 @@ const CoffeeStrong = ({ searchQuery = "" }) => {
               >
                 <Image
                   source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                  style={styles.akarIconsCircle}
                 />
               </TouchableOpacity>
             </View>
@@ -122,7 +121,6 @@ const CoffeeStrong = ({ searchQuery = "" }) => {
                 >
                   <Image
                     source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                    style={styles.akarIconsCircle}
                   />
                 </TouchableOpacity>
               </View>
@@ -156,7 +154,6 @@ const CoffeeStrong = ({ searchQuery = "" }) => {
                 >
                   <Image
                     source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                    style={styles.akarIconsCircle2}
                   />
                 </TouchableOpacity>
               </View>
@@ -190,7 +187,6 @@ const CoffeeStrong = ({ searchQuery = "" }) => {
                 >
                   <Image
                     source={require("../../icons/akar-icons-circle-plus-fill.png")}
-                    style={styles.akarIconsCircle3}
                   />
                 </TouchableOpacity>
               </View>
@@ -254,30 +250,48 @@ const styles = StyleSheet.create({
   overlap5: {
     backgroundColor: "#ffffff",
     borderRadius: 20,
-    boxShadow: "0px 4px 4px #00000040",
-    height: 193,
-    position: "relative",
-    width: 178,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 8,
+    height: 208,
+    width: 179,
   },
   overlap6: {
     backgroundColor: "#ffffff",
     borderRadius: 20,
-    boxShadow: "0px 4px 4px #00000040",
-    height: 193,
-    position: "relative",
-    width: 175,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 8,
+    height: 208,
+    width: 179,
   },
   overlap7: {
     backgroundColor: "#ffffff",
     borderRadius: 20,
-    boxShadow: "0px 4px 4px #00000040",
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 8,
     height: 208,
-    position: "relative",
     width: 179,
   },
   maskGroup: {
     height: 113,
-    left: 1,
+    left: 3,
     position: "absolute",
     top: 4,
     width: 173,
@@ -439,26 +453,12 @@ const styles = StyleSheet.create({
     position: "relative",
     width: 98,
   },
-  akarIconsCircle: {
+  plusIconContainer: {
     height: 36,
     left: 128,
     position: "absolute",
     top: 161,
     width: 39,
-  },
-  akarIconsCircle2: {
-    height: 33,
-    left: 128,
-    position: "absolute",
-    top: 149,
-    width: 39,
-  },
-  akarIconsCircle3: {
-    height: 33,
-    left: 125,
-    position: "absolute",
-    top: 149,
-    width: 38,
   },
 });
 
