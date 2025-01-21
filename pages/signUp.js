@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "react-native";
+import { saveUserData } from "../src/data/userStorage";
 
 import ArrowLeftIcon from "../icons/Arrow Left.png";
 
@@ -24,9 +25,21 @@ const SignUp = () => {
     setSelectedGender(gender);
   };
 
-  const handleSignUp = () => {
-    console.log("Data: ", { phone, email, username, gender: selectedGender });
-    navigation.navigate("SignIn");
+  const handleSignUp = async () => {
+    const userData = { 
+      phone, 
+      email, 
+      username, 
+      gender: selectedGender 
+    };
+
+    const saved = await saveUserData(userData);
+    if (saved) {
+      console.log('Data tersimpan:', userData);
+      navigation.navigate('SignIn');
+    } else {
+      alert('Gagal menyimpan data pengguna');
+    }
   };
 
   return (

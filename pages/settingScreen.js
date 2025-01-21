@@ -83,7 +83,10 @@ const SettingScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.logoutButton}>
+      <TouchableOpacity
+        style={styles.logoutButton}
+        onPress={() => navigation.navigate("LoginScreen")}
+      >
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
 
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
   section: {
     marginTop: 20,
     padding: 16,
-    bottom: 10
+    bottom: 10,
   },
   sectionTitle: {
     fontSize: 16,

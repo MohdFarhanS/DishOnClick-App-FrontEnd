@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { getUserData } from "../src/data/userStorage";
 
 // Import gambar (pastikan path-nya sesuai)
 import ArrowLeftIcon from "../icons/Arrow Left.png";
@@ -18,6 +19,15 @@ import MaskGroup from "../icons/maskGroup.png";
 const SignIn = () => {
   const navigation = useNavigation();
   const [phone, setPhone] = useState("");
+
+  const handleSignIn = async () => {
+    const userData = await getUserData();
+    if (userData && userData.phone === phone) {
+      navigation.navigate('Verification', { phone: userData.phone });
+    } else {
+      alert('Nomor telepon tidak terdaftar');
+    }
+  };
 
   return (
     <View style={styles.page}>
@@ -56,13 +66,8 @@ const SignIn = () => {
 
         <TouchableOpacity
           style={styles.buttonAddToCart}
-          onPress={() => {
-            if (phone !== "") {
-              navigation.navigate("Verification");
-            } else {
-              alert("Please enter your phone number");
-            }
-          }}
+          onPress={handleSignIn}
+
         >
           <Text style={styles.textWrapper3}>Sign in</Text>
         </TouchableOpacity>

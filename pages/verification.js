@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { getUserData } from "../src/data/userStorage";
 
 import ArrowLeftIcon from "../icons/Arrow Left.png";
 
 export const Verification = () => {
+  const [userPhone, setUserPhone] = useState('');
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const loadUserPhone = async () => {
+      const userData = await getUserData();
+      if (userData && userData.phone) {
+        setUserPhone('+62' + userData.phone);
+      }
+    };
+    
+    loadUserPhone();
+  }, []);
 
   return (
     <View style={styles.page}>
@@ -16,7 +29,7 @@ export const Verification = () => {
         >
           <Image source={ArrowLeftIcon} style={styles.arrowLeftImage} />
         </TouchableOpacity>
-        <Text style={styles.textWrapper}>+6282349846795</Text>
+        <Text style={styles.textWrapper}>{userPhone}</Text>
 
         <Text style={styles.textWrapper2}>Enter OTP Code</Text>
 
@@ -69,7 +82,7 @@ const styles = StyleSheet.create({
     fontFamily: "ADLaM Display-Regular",
     fontSize: 12,
     fontWeight: "400",
-    left: 151,
+    // left: 151,
     position: "absolute",
     top: 175,
     marginHorizontal: "auto",
@@ -119,6 +132,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     width: 70,
+    textAlign: 'center'
   },
   overlapGroup: {
     height: 60,
