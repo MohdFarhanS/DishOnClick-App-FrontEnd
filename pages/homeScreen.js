@@ -82,7 +82,10 @@ export const HomeScreen = () => {
               >
                 <Ionicons name="receipt-outline" size={24} color="black" />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.iconButton}>
+              <TouchableOpacity 
+              style={styles.iconButton}
+              onPress={() => navigation.navigate("Favorite")}
+              >
                 <AntDesign name="hearto" size={24} color="black" />
               </TouchableOpacity>
               <TouchableOpacity

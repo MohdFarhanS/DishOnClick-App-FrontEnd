@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -20,12 +20,7 @@ const OrderHistory = () => {
   useFocusEffect(
     React.useCallback(() => {
       if (route.params?.newOrder) {
-        console.log('New order received:', route.params.newOrder); // Debug log
-        setOrders(prevOrders => {
-          const updatedOrders = [...prevOrders, route.params.newOrder];
-          console.log('Updated orders:', updatedOrders); // Debug log
-          return updatedOrders;
-        });
+        setOrders(prevOrders => [...prevOrders, route.params.newOrder]);
       }
     }, [route.params?.newOrder])
   );
@@ -41,7 +36,6 @@ const OrderHistory = () => {
         console.error('Error loading orders:', error);
       }
     };
-    
     loadOrders();
   }, []);
 
@@ -56,7 +50,6 @@ const OrderHistory = () => {
           console.error('Error saving order:', error);
         }
       };
-      
       saveOrder();
     }
   }, [route.params?.newOrder]);
@@ -68,7 +61,7 @@ const OrderHistory = () => {
           <Text style={styles.orderId}>Order #{order.orderId}</Text>
           <Text style={styles.orderDate}>{order.date}</Text>
         </View>
-        <View style={[styles.statusContainer, { backgroundColor: '#4CAF50' }]}>
+        <View style={styles.statusContainer}>
           <Text style={styles.statusText}>Berhasil</Text>
         </View>
       </View>
@@ -86,9 +79,7 @@ const OrderHistory = () => {
         <Text style={styles.totalAmount}>Rp {order.total?.toLocaleString()}</Text>
       </View>
 
-      <View style={styles.paymentMethod}>
-        <Text style={styles.paymentText}>Via {order.paymentMethod}</Text>
-      </View>
+      <Text style={styles.paymentText}>Via {order.paymentMethod}</Text>
     </View>
   );
 
@@ -96,8 +87,8 @@ const OrderHistory = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity 
-          onPress={() => navigation.goBack()}
           style={styles.backButton}
+          onPress={() => navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
@@ -105,22 +96,27 @@ const OrderHistory = () => {
       </View>
 
       {orders.length > 0 ? (
-        <ScrollView style={styles.scrollView}>
+        <ScrollView 
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollViewContent}
+        >
           {orders.map((order, index) => (
             <OrderCard key={`${order.orderId}-${index}`} order={order} />
           ))}
         </ScrollView>
       ) : (
-        <View style={styles.emptyStateContainer}>
-          <View style={styles.contentContainer}>
-            <Text style={styles.emptyStateTitle}>No Order Yet</Text>
-            <Text style={styles.emptyStateSubtitle}>
+        <View style={styles.emptyContainer}>
+          <Image
+            source={require('../assets/blurBg.png')}
+            style={styles.emptyImage}
+            resizeMode="contain"
+          />
+          <View style={styles.emptyContent}>
+            <Text style={styles.emptyTitle}>No Order Yet</Text>
+            <Text style={styles.emptySubtitle}>
               Order our Specialty Coffee now
             </Text>
-            <Image
-              source={require('../assets/blurBg.png')}
-              style={styles.emptyStateImage}
-            />
           </View>
         </View>
       )}
@@ -133,18 +129,49 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
-  orderCard: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 15,
-    margin: 16,
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
-    elevation: 3,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+    backgroundColor: "#FFFFFF",
+    elevation: 2,
+    height: 100,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    top : 10
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#000000',
+    marginLeft: 8,
+    top: 10
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#cecdcd',
+  },
+  scrollViewContent: {
+    padding: 16,
+  },
+  orderCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    elevation: 2,
   },
   orderHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
+    alignItems: 'flex-start',
+    marginBottom: 16,
   },
   orderId: {
     fontSize: 16,
@@ -159,8 +186,8 @@ const styles = StyleSheet.create({
   statusContainer: {
     backgroundColor: '#4CAF50',
     paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
   },
   statusText: {
     color: '#FFFFFF',
@@ -171,11 +198,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 8,
+    marginBottom: 16,
   },
   productName: {
     fontSize: 14,
     color: '#000000',
+    flex: 1,
   },
   quantityPrice: {
     flexDirection: 'row',
@@ -189,86 +217,55 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 14,
     color: '#8B4513',
+    fontWeight: '600',
   },
   totalSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
-    paddingTop: 8,
-    marginTop: 8,
+    marginBottom: 8,
   },
   totalText: {
     fontSize: 14,
     color: '#666666',
   },
   totalAmount: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#8B4513',
-  },
-  paymentMethod: {
-    marginTop: 8,
   },
   paymentText: {
     fontSize: 12,
     color: '#666666',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-    backgroundColor: '#FFFFFF',
-    elevation: 2,
-    height: 100,
-  },
-  backButton: {
-    padding: 8,
-    top: 10,
-  },
-  headerTitle: {
-    marginLeft: 16,
-    fontSize: 18,
-    fontFamily: 'Montserrat-SemiBold',
-    color: '#000000',
-    top: 10,
-  },
-  emptyStateContainer: {
+  emptyContainer: {
     flex: 1,
-    backgroundColor: "#cecdcd",
+    backgroundColor: '#F5F5F5',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
-  contentContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyStateImage: {
-    width: 300,
+  emptyImage: {
+    width: '80%',
     height: 200,
-    bottom: 130,
-    left: 23
+    marginBottom: 20,
   },
-  emptyStateTitle: {
+  emptyContent: {
+    alignItems: 'center',
+  },
+  emptyTitle: {
     fontSize: 20,
-    fontFamily: 'Montserrat-SemiBold',
+    fontWeight: 'bold',
     color: '#000000',
-    alignItems: 'center',
-    bottom: 150,
-    fontWeight: "bold",
-
+    marginBottom: 8,
   },
-  emptyStateSubtitle: {
+  emptySubtitle: {
     fontSize: 14,
-    fontFamily: 'Montserrat-Regular',
-    color: '#757575',
+    color: '#666666',
     textAlign: 'center',
-    marginBottom: 16,
-    alignItems: 'center',
-    bottom: 140
   },
 });
 

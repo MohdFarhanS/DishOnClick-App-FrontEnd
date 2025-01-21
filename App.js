@@ -14,6 +14,7 @@ import AboutScreen from "./pages/aboutScreen";
 import LanguageScreen from "./pages/languageScreen";
 import HelpScreen from "./pages/helpScreen";
 import LoginScreen from "./pages/loginScreen";
+import Favorite from "./pages/favoriteScreen";
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,7 @@ const App = () => {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Verification" component={Verification} />
         <Stack.Screen name="AppNavigator" component={AppNavigator} />
+        <Stack.Screen name="Favorite" component={Favorite} />
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="OrderHistory" component={OrderHistory} />
         <Stack.Screen name="OrderSummary" component={OrderSummary} />

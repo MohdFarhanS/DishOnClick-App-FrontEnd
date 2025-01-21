@@ -9,18 +9,8 @@ import {
 
 const PaymentTunaiModal = ({ visible, onClose, total, paymentMethod, navigation, orderDetails }) => {
   const handleViewOrder = () => {
-    console.log('Order details being sent:', orderDetails); // Debug log
     onClose(); // Tutup modal
-    
-    // Tambahkan timeout kecil untuk memastikan modal tertutup sebelum navigasi
-    setTimeout(() => {
-      navigation.navigate('OrderHistory', {
-        newOrder: {
-          ...orderDetails,
-          date: new Date().toLocaleString(), // Pastikan tanggal selalu diperbarui
-        }
-      });
-    }, 100);
+    navigation.navigate('OrderHistory', { newOrder: orderDetails });
   };
   
   return (
