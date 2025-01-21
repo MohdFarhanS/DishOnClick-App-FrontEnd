@@ -6,16 +6,31 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Image,
+  ScrollView,
+  ImageBackground
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import PaymentTunaiModal from "./paymentTunaiModal";
 
-const PaymentScreen = ({ navigation }) => {
+const PaymentScreen = ({ navigation, route }) => {
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentOrder, setCurrentOrder] = useState(null);
+
+  const { product } = route.params || {};
+
+  const generateOrderId = () => {
+    return `ORD-${Math.floor(Math.random() * 9000000000) + 1000000000}`;
+  };
+
   const orders = [
-    { name: "Mead Raff", quantity: 1, price: 50000 },
-    { name: "Mead Raff", quantity: 1, price: 50000 },
+    {
+      name: product?.name || "Coffee",
+      quantity: product?.quantity || 1,
+      price: product?.price || 0,
+      size: product?.selectedSize || "Small",
+      sugarLevel: product?.selectedSugar || "No Sugar",
+    },
   ];
 
   const totalPayment = orders.reduce(
@@ -24,7 +39,24 @@ const PaymentScreen = ({ navigation }) => {
   );
 
   const handlePayment = () => {
-    if (selectedPayment === 'tunai') {
+    console.log("Product data:", product);
+
+    const newOrder = {
+      orderId: generateOrderId(),
+      date: new Date().toLocaleString(),
+      productName: orders[0].name, // Menggunakan data dari orders array
+      quantity: orders[0].quantity,
+      price: orders[0].price,
+      total: totalPayment,
+      paymentMethod: selectedPayment === "tunai" ? "Tunai" : "QRIS",
+      status: "Berhasil",
+    };
+
+    console.log("New order created:", newOrder);
+
+    setCurrentOrder(newOrder);
+
+    if (selectedPayment === "tunai") {
       setIsModalVisible(true);
     }
     // Add handling for QRIS payment if needed
@@ -52,13 +84,17 @@ const PaymentScreen = ({ navigation }) => {
       {/* Order Summary Card */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Order Summary</Text>
-
         {orders.map((order, index) => (
           <View key={index} style={styles.orderItem}>
-            <Text style={styles.orderText}>
-              {order.name}
-              {"\n"}x{order.quantity}
-            </Text>
+            <View style={styles.orderDetails}>
+              <Text style={styles.orderText}>
+                {order.name}
+                {"\n"}x{order.quantity}
+              </Text>
+              <Text style={styles.orderSpecs}>
+                Size: {order.size} • Sugar: {order.sugarLevel}
+              </Text>
+            </View>
             <Text style={styles.priceText}>
               Rp {order.price.toLocaleString()}
             </Text>
@@ -109,8 +145,9 @@ const PaymentScreen = ({ navigation }) => {
 
       {/* Pay Now Button */}
       <TouchableOpacity
-        style={styles.payButton}
+        style={[styles.payButton, !selectedPayment && styles.payButtonDisabled]}
         onPress={handlePayment}
+        disabled={!selectedPayment}
       >
         <Text style={styles.payButtonText}>Pay Now</Text>
       </TouchableOpacity>
@@ -120,6 +157,8 @@ const PaymentScreen = ({ navigation }) => {
         onClose={handleCloseModal}
         total={totalPayment}
         paymentMethod={selectedPayment === "tunai" ? "Cash" : "QRIS"}
+        navigation={navigation}
+        orderDetails={currentOrder}
       />
     </SafeAreaView>
   );
@@ -129,6 +168,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5F5F5",
+  },
+  orderDetails: {
+    flex: 1,
+  },
+  orderSpecs: {
+    fontSize: 12,
+    color: "#666",
+    marginTop: 4,
+  },
+  orderItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 16,
+    alignItems: "center",
   },
   header: {
     flexDirection: "row",

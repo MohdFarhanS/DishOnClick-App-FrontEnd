@@ -130,8 +130,16 @@ const OrderScreen = ({ navigation, route }) => {
         <View style={styles.addToCartContainer}>
           <TouchableOpacity
             style={styles.addToCartButton}
-            onPress={() => navigation.navigate("OrderSummary")}
-            
+            onPress={() => navigation.navigate("OrderSummary", {
+              product: {
+                ...product,
+                selectedSize: cupSize,
+                selectedSugar: sugarLevel,
+                quantity: quantity,
+                totalPrice: totalPrice,
+                orderDate: new Date().toISOString() // Tambahkan tanggal pesanan
+              }
+            })}            
           >
             <Text style={styles.addToCartText}>Add to cart</Text>
             <View style={styles.divider} />

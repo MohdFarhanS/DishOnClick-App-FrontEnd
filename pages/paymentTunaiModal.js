@@ -7,7 +7,22 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-const PaymentTunaiModal = ({ visible, onClose, total, paymentMethod }) => {
+const PaymentTunaiModal = ({ visible, onClose, total, paymentMethod, navigation, orderDetails }) => {
+  const handleViewOrder = () => {
+    console.log('Order details being sent:', orderDetails); // Debug log
+    onClose(); // Tutup modal
+    
+    // Tambahkan timeout kecil untuk memastikan modal tertutup sebelum navigasi
+    setTimeout(() => {
+      navigation.navigate('OrderHistory', {
+        newOrder: {
+          ...orderDetails,
+          date: new Date().toLocaleString(), // Pastikan tanggal selalu diperbarui
+        }
+      });
+    }, 100);
+  };
+  
   return (
     <Modal
       animationType="fade"
@@ -29,7 +44,7 @@ const PaymentTunaiModal = ({ visible, onClose, total, paymentMethod }) => {
 
           <TouchableOpacity 
             style={styles.viewOrderButton} 
-            onPress={onClose}
+            onPress={handleViewOrder}
           >
             <Text style={styles.viewOrderText}>View Order</Text>
           </TouchableOpacity>
