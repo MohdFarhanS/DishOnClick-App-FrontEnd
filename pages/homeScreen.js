@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -15,11 +15,29 @@ import CoffeeCreamy from "../component/categories/CoffeeCreamy";
 import NoCoffee from "../component/categories/NoCoffee";
 import { allProducts } from "../src/data/product";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState("All Coffee");
   const [searchQuery, setSearchQuery] = useState("");
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('userData');
+        if (userData) {
+          const { username: storedUsername } = JSON.parse(userData);
+          setUsername(storedUsername);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    getUserData();
+  }, []);
 
   const categories = [
     "All Coffee",
@@ -78,7 +96,7 @@ export const HomeScreen = () => {
             <View style={styles.navIcons}>
               <TouchableOpacity
                 style={styles.iconButton}
-                onPress={() => navigation.navigate("OrderHistory")}
+                onPress={() => navigation.navigate("OrderHistory", {fromHomeScreen: true})}
               >
                 <Ionicons name="receipt-outline" size={24} color="black" />
               </TouchableOpacity>
@@ -110,7 +128,7 @@ export const HomeScreen = () => {
             <View style={styles.overlapWrapper}>
               <View style={styles.overlap}>
                 <View style={styles.rectangle} />
-                <Text style={styles.textWrapper}>Good morning, Sindi</Text>
+                <Text style={styles.textWrapper}>Good morning, {username}</Text>
 
                 <View style={styles.search}>
                   <Image

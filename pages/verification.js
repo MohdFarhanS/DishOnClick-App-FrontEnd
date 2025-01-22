@@ -1,201 +1,271 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  SafeAreaView,
+  ActivityIndicator
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { getUserData } from "../src/data/userStorage";
+import { OTPInput } from "../src/data/OTPInput";
+import { getUserData } from '../src/data/userStorage';
 
 import ArrowLeftIcon from "../icons/Arrow Left.png";
 
 export const Verification = () => {
-  const [userPhone, setUserPhone] = useState('');
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [timer, setTimer] = useState(50);
+  const [otpCode, setOtpCode] = useState('');
+  const [generatedOTP, setGeneratedOTP] = useState('');
+  const [canResend, setCanResend] = useState(false);
+  const [userPhone, setUserPhone] = useState('');
+  const timerInterval = useRef(null);
 
   useEffect(() => {
-    const loadUserPhone = async () => {
-      const userData = await getUserData();
-      if (userData && userData.phone) {
-        setUserPhone('+62' + userData.phone);
+    const initializeVerification = async () => {
+      setLoading(true);
+      try {
+        await loadUserPhone();
+        generateOTP();
+        startTimer();
+      } catch (error) {
+        Alert.alert('Error', 'Failed to initialize verification');
+      } finally {
+        setLoading(false);
       }
     };
-    
-    loadUserPhone();
+
+    initializeVerification();
+    return () => {
+      if (timerInterval.current) {
+        clearInterval(timerInterval.current);
+      }
+    };
   }, []);
 
+  const loadUserPhone = async () => {
+    const userData = await getUserData();
+    if (userData?.phone) {
+      setUserPhone('+62' + userData.phone);
+    } else {
+      Alert.alert('Error', 'No phone number found');
+      navigation.goBack();
+    }
+  };
+
+  const generateOTP = () => {
+    const newOTP = Math.floor(1000 + Math.random() * 9000).toString();
+    setGeneratedOTP(newOTP);
+    console.log('OTP generated:', newOTP);
+    Alert.alert('OTP Code', `Your OTP: ${newOTP}`);
+  };
+
+  const startTimer = () => {
+    setCanResend(false);
+    setTimer(50);
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current);
+    }
+    timerInterval.current = setInterval(() => {
+      setTimer(prev => {
+        if (prev <= 1) {
+          clearInterval(timerInterval.current);
+          setCanResend(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const handleVerify = async () => {
+    setLoading(true);
+    try {
+      if (otpCode === generatedOTP) {
+        navigation.replace('AppNavigator');
+      } else {
+        Alert.alert('Error', 'Kode OTP tidak valid');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Verification failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    if (canResend) {
+      setResending(true);
+      try {
+        // Clear previous OTP
+        setOtpCode('');
+        
+        // Generate new OTP
+        generateOTP();
+        
+        // Restart timer
+        startTimer();
+        
+        // Show success message
+        Alert.alert(
+          'Success',
+          'Verification code has been resent successfully',
+          [{ text: 'OK' }]
+        );
+      } catch (error) {
+        Alert.alert(
+          'Error',
+          'Failed to resend verification code. Please try again.',
+          [{ text: 'OK' }]
+        );
+      } finally {
+        setResending(false);
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#8B5E3C" />
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.page}>
-      <View style={styles.div}>
-        <TouchableOpacity
-          style={styles.arrowLeft}
-          onPress={() => navigation.goBack()}
-        >
-          <Image source={ArrowLeftIcon} style={styles.arrowLeftImage} />
-        </TouchableOpacity>
-        <Text style={styles.textWrapper}>{userPhone}</Text>
-
-        <Text style={styles.textWrapper2}>Enter OTP Code</Text>
-
-        <Text style={styles.textWrapper3}>Verification Code</Text>
-
-        <TouchableOpacity
-          style={styles.buttonAddToCart}
-          onPress={() => navigation.navigate("AppNavigator")}
-        >
-          <View style={styles.group}>
-            <Text style={styles.textWrapper4}>Verify</Text>
-          </View>
-        </TouchableOpacity>
-
-        <View style={styles.overlapGroup}>
-          <Text style={styles.textWrapper5}>Input Verification Code</Text>
-
-          <Text style={styles.p}>Verification code sent to Whatsapp</Text>
+    <SafeAreaView style={styles.page}>
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={ArrowLeftIcon} style={styles.arrowLeftImage} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Verification</Text>
         </View>
 
-        <Image source={require("../icons/Line2.png")} style={styles.line} />
+        {/* Main Content */}
+        <View style={styles.content}>
+          <Text style={styles.title}>Enter OTP Code</Text>
+          <Text style={styles.subtitle}>Code sent to {userPhone}</Text>
+          
+          <OTPInput length={4} onComplete={setOtpCode} value={otpCode} />
 
-        <Text style={styles.textWrapper6}>Didn’t receive code?</Text>
+          <TouchableOpacity
+            style={[styles.verifyButton, { opacity: otpCode.length === 4 ? 1 : 0.5 }]}
+            onPress={handleVerify}
+            disabled={otpCode.length !== 4 || loading}
+          >
+            <Text style={styles.verifyButtonText}>
+              {loading ? 'Verifying...' : 'Verify'}
+            </Text>
+          </TouchableOpacity>
 
-        <Text style={styles.textWrapper7}>50</Text>
+          {/* Resend Section */}
+          <View style={styles.resendContainer}>
+            <Text style={styles.resendText}>Didn't receive code?</Text>
+            <TouchableOpacity
+              onPress={handleResendOTP}
+              disabled={!canResend || resending}
+              style={styles.resendButton}
+            >
+              {resending ? (
+                <ActivityIndicator size="small" color="#8B5E3C" />
+              ) : (
+                <Text style={[styles.timerText, canResend && styles.resendActive]}>
+                  {canResend ? 'Resend' : `Wait ${timer}s`}
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   page: {
-    backgroundColor: "#e3d5ca",
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#E3D5CA',
   },
-  div: {
-    backgroundColor: "#e3d5ca",
-    borderWidth: 1,
-    borderColor: "#e3d5ca",
-    height: 823,
-    position: "relative",
-    width: 411,
-    justifyContent: "center",
-    alignItems: "center",
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#E3D5CA',
   },
-  textWrapper: {
-    color: "#000000",
-    fontFamily: "ADLaM Display-Regular",
-    fontSize: 12,
-    fontWeight: "400",
-    // left: 151,
-    position: "absolute",
-    top: 175,
-    marginHorizontal: "auto",
-    textAlign: "center",
+  container: {
+    flex: 1,
+    padding: 20,
   },
-  textWrapper2: {
-    color: "#000000",
-    fontFamily: "ADLaM Display-Regular",
-    fontSize: 16,
-    fontWeight: "400",
-    left: 65,
-    position: "absolute",
-    top: 30,
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+    top: 25
   },
-  textWrapper3: {
-    color: "#939090",
-    fontFamily: "Montserrat-SemiBold",
-    fontSize: 17,
-    fontWeight: "600",
-    height: 21,
-    position: "absolute",
-    top: 220,
-    textAlign: "center",
-  },
-  buttonAddToCart: {
-    backgroundColor: "#8b5e3c",
-    borderRadius: 30,
-    height: 38,
-    left: 25,
-    position: "absolute",
-    top: 291,
-    width: 360,
-  },
-  group: {
-    height: 24,
-    left: 145,
-    position: "relative",
-    top: 7,
-    width: 72,
-  },
-  textWrapper4: {
-    color: "#ffffff",
-    fontFamily: "Montserrat-ExtraBold",
+  headerTitle: {
     fontSize: 20,
-    fontWeight: "800",
-    left: 0,
-    position: "absolute",
-    top: 0,
-    width: 70,
-    textAlign: 'center'
-  },
-  overlapGroup: {
-    height: 60,
-    left: 31,
-    position: "absolute",
-    top: 115,
-    width: 340,
-  },
-  textWrapper5: {
-    color: "#8b5e3c",
-    fontFamily: "Poppins-Black",
-    fontSize: 28,
-    fontWeight: "900",
-    left: 25,
-    position: "absolute",
-    textAlign: "center",
-    top: 0,
-    marginHorizontal: "center",
-  },
-  p: {
-    color: "#000000",
-    fontFamily: "Poppins-Regular",
-    fontSize: 14,
-    fontWeight: "400",
-    left: 0,
-    right: 0,
-    position: "absolute",
-    textAlign: "center",
-    top: 39,
-    marginHorizontal: "auto",
-  },
-  line: {
-    height: 1,
-    position: "absolute",
-    top: 245,
-    width: 164,
-  },
-  textWrapper6: {
-    color: "#000000",
-    fontFamily: "Montserrat-Regular",
-    fontSize: 16,
-    fontWeight: "400",
-    position: "absolute",
-    top: 357,
-    alignItems: "center",
-  },
-  textWrapper7: {
-    color: "#b61d1d",
-    fontFamily: "Montserrat-Medium",
-    fontSize: 16,
-    fontWeight: "500",
-    alignItems: "center",
-    position: "absolute",
-    top: 390,
-  },
-  arrowLeft: {
-    position: "absolute",
-    top: 30,
-    left: 29,
+    fontWeight: 'bold',
+    marginLeft: 20,
   },
   arrowLeftImage: {
     width: 24,
     height: 24,
+  },
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    paddingTop: 40,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#8B5E3C',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 30,
+  },
+  verifyButton: {
+    backgroundColor: '#8B5E3C',
+    borderRadius: 30,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  verifyButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  resendContainer: {
+    alignItems: 'center',
+    marginTop: 30,
+  },
+  resendText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  timerText: {
+    fontSize: 16,
+    color: '#666',
+  },
+  resendActive: {
+    color: '#8B5E3C',
+    fontWeight: 'bold',
+  },
+  resendButton: {
+    padding: 8,
   },
 });
 

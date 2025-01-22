@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Image,
-  ScrollView,
-  ImageBackground
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import PaymentTunaiModal from "./paymentTunaiModal";

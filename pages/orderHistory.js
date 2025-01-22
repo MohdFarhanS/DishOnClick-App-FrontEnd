@@ -9,24 +9,17 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Application from 'expo-application';
 
-const OrderHistory = () => {
+const OrderHistory = ({ route }) => {
   const navigation = useNavigation();
-  const route = useRoute();
   const [orders, setOrders] = useState([]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (route.params?.newOrder) {
-        setOrders(prevOrders => [...prevOrders, route.params.newOrder]);
-      }
-    }, [route.params?.newOrder])
-  );
-
+  // Handle direct navigation from HomeScreen
   useEffect(() => {
-    const loadOrders = async () => {
+    const unsubscribe = navigation.addListener('focus', async () => {
       try {
         const savedOrders = await AsyncStorage.getItem('orders');
         if (savedOrders) {
@@ -35,23 +28,37 @@ const OrderHistory = () => {
       } catch (error) {
         console.error('Error loading orders:', error);
       }
-    };
-    loadOrders();
-  }, []);
+    });
 
+    return unsubscribe;
+  }, [navigation]);
+
+  // Handle new order
   useEffect(() => {
-    if (route.params?.newOrder) {
-      const saveOrder = async () => {
+    const handleNewOrder = async () => {
+      if (route.params?.newOrder) { // Hapus pengecekan isInitialLoad
         try {
-          const newOrders = [...orders, route.params.newOrder];
-          await AsyncStorage.setItem('orders', JSON.stringify(newOrders));
-          setOrders(newOrders);
+          const savedOrders = await AsyncStorage.getItem('orders');
+          let currentOrders = savedOrders ? JSON.parse(savedOrders) : [];
+          
+          const orderExists = currentOrders.some(
+            order => order.orderId === route.params.newOrder.orderId
+          );
+          
+          if (!orderExists) {
+            const newOrders = [...currentOrders, route.params.newOrder];
+            await AsyncStorage.setItem('orders', JSON.stringify(newOrders));
+            setOrders(newOrders);
+          } else {
+            setOrders(currentOrders);
+          }
         } catch (error) {
-          console.error('Error saving order:', error);
+          console.error('Error handling new order:', error);
         }
-      };
-      saveOrder();
-    }
+      }
+    };
+  
+    handleNewOrder();
   }, [route.params?.newOrder]);
 
   const OrderCard = ({ order }) => (
