@@ -166,22 +166,22 @@ export const Verification = () => {
           </TouchableOpacity>
 
           {/* Resend Section */}
-          <View style={styles.resendContainer}>
-            <Text style={styles.resendText}>Didn't receive code?</Text>
-            <TouchableOpacity
-              onPress={handleResendOTP}
-              disabled={!canResend || resending}
-              style={styles.resendButton}
-            >
+          <TouchableOpacity 
+            style={styles.resendContainer}
+            onPress={handleResendOTP}
+            disabled={!canResend || resending}
+          >
+            <View style={styles.resendTextContainer}>
+              <Text style={styles.resendText}>Didn't recive any code? </Text>
               {resending ? (
                 <ActivityIndicator size="small" color="#8B5E3C" />
               ) : (
-                <Text style={[styles.timerText, canResend && styles.resendActive]}>
-                  {canResend ? 'Resend' : `Wait ${timer}s`}
+                <Text style={[styles.resendActionText, canResend && styles.resendActive]}>
+                  {canResend ? 'Resend' : `Tunggu ${timer} detik`}
                 </Text>
               )}
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -249,23 +249,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   resendContainer: {
-    alignItems: 'center',
     marginTop: 30,
+    padding: 10, // Menambah padding untuk area sentuh yang lebih besar
+  },
+  resendTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   resendText: {
     fontSize: 16,
-    marginBottom: 10,
+    color: '#666',
   },
-  timerText: {
+  resendActionText: {
     fontSize: 16,
     color: '#666',
   },
   resendActive: {
     color: '#8B5E3C',
     fontWeight: 'bold',
-  },
-  resendButton: {
-    padding: 8,
   },
 });
 

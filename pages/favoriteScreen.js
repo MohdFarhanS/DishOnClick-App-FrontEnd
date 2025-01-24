@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,62 +6,133 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { allProducts } from "../src/data/product";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Favorite = ({ navigation }) => {
-  const [favoriteItems, setFavoriteItems] = useState(allProducts);
+  const [favoriteItems, setFavoriteItems] = useState([]);
 
-  const handleAddToCart = (item) => {
-    Alert.alert("Add to Cart", `Do you want to add ${item.name} to cart?`, [
-      {
-        text: "Cancel",
-        style: "cancel",
-      },
-      {
-        text: "Yes",
-        onPress: () => {
-          // Implementasi logika add to cart di sini
-          Alert.alert("Success", "Item added to cart!");
+  useEffect(() => {
+    loadFavorites();
+  }, []);
+
+  const loadFavorites = async () => {
+    try {
+      const favorites = await AsyncStorage.getItem("favorites");
+      if (favorites) {
+        setFavoriteItems(JSON.parse(favorites));
+      }
+    } catch (error) {
+      console.error("Error loading favorites:", error);
+    }
+  };
+
+  const removeFavorite = async (itemId) => {
+    Alert.alert(
+      "Hapus dari Favorit",
+      "Apakah Anda yakin ingin menghapus item ini dari favorit?",
+      [
+        {
+          text: "Batal",
+          style: "cancel",
+        },
+        {
+          text: "Hapus",
+          onPress: async () => {
+            try {
+              const updatedFavorites = favoriteItems.filter(
+                (item) => item.id !== itemId
+              );
+              await AsyncStorage.setItem(
+                "favorites",
+                JSON.stringify(updatedFavorites)
+              );
+              setFavoriteItems(updatedFavorites);
+            } catch (error) {
+              console.error("Error removing favorite:", error);
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const navigateToOrder = (item) => {
+    console.log("Navigating to Order with item:", item);
+    navigation.navigate("AppNavigator", {
+      screen: "Order",
+      params: {
+        screen: "OrderMain",
+        params: {
+          product: item,
         },
       },
-    ]);
-  };
-  const handleImageError = (itemName) => {
-    console.warn(`Failed to load image for ${itemName}`);
+    });
   };
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Menu Favorite</Text>
+        <Text style={styles.headerTitle}>Menu Favorit</Text>
       </View>
 
       {/* Content */}
-      <ScrollView 
-        style={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {favoriteItems.length > 0 ? (
-          favoriteItems.map((item, index) => (
-            <MenuItem
-              key={item.id || index}
-              item={item}
-              onAddToCart={() => handleAddToCart(item)}
-              onImageError={() => handleImageError(item.name)}
-            />
+          favoriteItems.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.card}
+              // onPress={() => navigateToOrder(item)}
+            >
+              <Image
+                source={item.image}
+                style={styles.cardImage}
+                resizeMode="cover"
+              />
+              <View style={styles.cardContent}>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.cardTitle}>{item.name}</Text>
+                  <TouchableOpacity
+                    style={styles.heartButton}
+                    onPress={() => removeFavorite(item.id)}
+                  >
+                    <Ionicons name="heart" size={24} color="#FF4B4B" />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.cardDescription} numberOfLines={2}>
+                  {item.description}
+                </Text>
+                <View style={styles.cardFooter}>
+                  <Text style={styles.price}>
+                    Rp {item.price.toLocaleString("id-ID")}
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.orderButton}
+                    onPress={() => navigateToOrder(item)}
+                  >
+                    <Text style={styles.orderButtonText}>Pesan</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableOpacity>
           ))
         ) : (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyStateText}>No favorite items yet</Text>
+            <Ionicons name="heart-outline" size={64} color="#666666" />
+            <Text style={styles.emptyStateText}>Belum ada menu favorit</Text>
+            <Text style={styles.emptyStateSubtext}>
+              Tambahkan menu favorit Anda dengan menekan ikon hati pada menu
+            </Text>
           </View>
         )}
       </ScrollView>
@@ -69,43 +140,10 @@ const Favorite = ({ navigation }) => {
   );
 };
 
-const MenuItem = ({ item, onAddToCart, onImageError }) => {
-  const formatPrice = (price) => {
-    return price.toLocaleString('id-ID');
-  };
-
-  return (
-    <View style={styles.menuItem}>
-      <Image 
-        source={item.image}
-        style={styles.menuImage}
-        onError={onImageError}
-        resizeMode="cover"
-      />
-      <View style={styles.menuInfo}>
-        <Text style={styles.menuTitle}>{item.name}</Text>
-        <Text style={styles.menuDescription} numberOfLines={2}>
-          {item.description}
-        </Text>
-        <View style={styles.priceContainer}>
-          <Text style={styles.pricePrefix}>Rp</Text>
-          <Text style={styles.price}>{formatPrice(item.price)}</Text>
-          <TouchableOpacity 
-            style={styles.addButton}
-            onPress={onAddToCart}
-          >
-            <Ionicons name="add" size={16} color="#8B4513" />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  );
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#cecdcd",
+    backgroundColor: "#F5F5F5",
   },
   header: {
     flexDirection: "row",
@@ -118,98 +156,90 @@ const styles = StyleSheet.create({
     height: 100,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    top: 10,
+    padding: 8,
+    top: 10
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#000000",
-    marginLeft: 8,
-    top: 10,
+    marginLeft: 16,
+    top: 10
   },
   content: {
     flex: 1,
     padding: 16,
   },
-  menuItem: {
+  card: {
     backgroundColor: "white",
     borderRadius: 12,
-    padding: 12,
     marginBottom: 16,
-    flexDirection: "column",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    overflow: "hidden",
     elevation: 3,
   },
-  menuImage: {
-    width: '100%',
-    height: 160,
-    borderRadius: 8,
-    backgroundColor: '#F5F5F5',
+  cardImage: {
+    width: "100%",
+    height: 180,
   },
-  menuInfo: {
-    marginTop: 12,
+  cardContent: {
+    padding: 16,
   },
-  menuTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 4,
-    color: '#000000',
-  },
-  menuDescription: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
-    lineHeight: 20,
-  },
-  priceContainer: {
+  cardHeader: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 4,
+    alignItems: "center",
+    marginBottom: 8,
   },
-  pricePrefix: {
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    flex: 1,
+  },
+  heartButton: {
+    padding: 4,
+  },
+  cardDescription: {
     fontSize: 14,
-    color: "#000",
-    fontWeight: '500',
+    color: "#666666",
+    marginBottom: 16,
+  },
+  cardFooter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   price: {
     fontSize: 16,
-    fontWeight: "bold",
-    flex: 1,
-    marginLeft: 4,
-    color: '#8B4513',
+    fontWeight: "600",
+    color: "#8B4513",
   },
-  addButton: {
-    backgroundColor: '#FFF',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#8B4513',
+  orderButton: {
+    backgroundColor: "#8B4513",
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  orderButtonText: {
+    color: "white",
+    fontWeight: "600",
   },
   emptyState: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    marginTop: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 100,
   },
   emptyStateText: {
-    fontSize: 16,
-    color: '#666666',
-    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#666666",
+    marginTop: 16,
+  },
+  emptyStateSubtext: {
+    fontSize: 14,
+    color: "#999999",
+    textAlign: "center",
+    marginTop: 8,
+    paddingHorizontal: 32,
   },
 });
 

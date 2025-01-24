@@ -71,7 +71,7 @@ const PaymentScreen = ({ navigation, route }) => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate("AppNavigator")}
           style={styles.backButton}
         >
           <Ionicons name="arrow-back" size={24} color="black" />

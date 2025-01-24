@@ -15,6 +15,7 @@ const OrderStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="OrderMain" component={OrderScreen} />
+      {/* <Stack.Screen name="Favorite" component={FavoriteScreen} /> */}
       {/* Tambahkan screen lain yang terkait dengan Order di sini */}
     </Stack.Navigator>
   );

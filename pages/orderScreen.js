@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OrderScreen = ({ navigation, route }) => {
   const product = route.params?.product || {
@@ -21,6 +22,50 @@ const OrderScreen = ({ navigation, route }) => {
   const [cupSize, setCupSize] = useState("Small");
   const [sugarLevel, setSugarLevel] = useState("No Sugar");
   const [quantity, setQuantity] = useState(1);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    checkIfFavorite();
+  }, []);
+
+  const checkIfFavorite = async () => {
+    try {
+      const favorites = await AsyncStorage.getItem('favorites');
+      if (favorites) {
+        const favoritesArray = JSON.parse(favorites);
+        const isProductFavorite = favoritesArray.some(fav => fav.id === product.id);
+        setIsFavorite(isProductFavorite);
+      }
+    } catch (error) {
+      console.error('Error checking favorites:', error);
+    }
+  };
+
+  const toggleFavorite = async () => {
+    try {
+      const favorites = await AsyncStorage.getItem('favorites');
+      let favoritesArray = favorites ? JSON.parse(favorites) : [];
+
+      if (isFavorite) {
+        // Hapus dari favorit
+        favoritesArray = favoritesArray.filter(fav => fav.id !== product.id);
+      } else {
+        // Tambah ke favorit
+        favoritesArray.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          description: product.description,
+          image: product.image
+        });
+      }
+
+      await AsyncStorage.setItem('favorites', JSON.stringify(favoritesArray));
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
 
   const sizes = ["Small", "Medium", "Large"];
   const sugarLevels = ["No Sugar", "Low", "Medium"];
@@ -37,8 +82,15 @@ const OrderScreen = ({ navigation, route }) => {
         >
           <Ionicons name="chevron-back" size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.heartButton}>
-          <Ionicons name="heart-outline" size={24} color="white" />
+        <TouchableOpacity 
+          style={[styles.heartButton, isFavorite && styles.heartButtonActive]}
+          onPress={toggleFavorite}
+        >
+          <Ionicons 
+            name={isFavorite ? "heart" : "heart-outline"} 
+            size={24} 
+            color={isFavorite ? "#FF4B4B" : "white"} 
+          />
         </TouchableOpacity>
       </View>
 
@@ -161,7 +213,9 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     paddingBottom: 100, // Increased padding to prevent content from being hidden behind the button
   },
-
+  heartButtonActive: {
+    backgroundColor: "rgba(255,255,255,0.9)",
+  },
   addToCartWrapper: {
     position: "absolute",
     bottom: 0,
