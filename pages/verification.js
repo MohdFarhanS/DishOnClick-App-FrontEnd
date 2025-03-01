@@ -13,7 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { OTPInput } from "../src/data/OTPInput";
 import { getUserData } from '../src/data/userStorage';
 
-import ArrowLeftIcon from "../icons/Arrow Left.png";
+import ArrowLeftIcon from "../icons/Arrow-Left.png";
 
 export const Verification = () => {
   const navigation = useNavigation();

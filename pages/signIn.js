@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { getUserData } from "../src/data/userStorage";
 
 // Import gambar (pastikan path-nya sesuai)
-import ArrowLeftIcon from "../icons/Arrow Left.png";
+import ArrowLeftIcon from "../icons/Arrow-Left.png";
 import CoffeeRoastery from "../assets/coffeeRoastery.png";
 import Line2 from "../icons/Line2.png";
 import MaskGroup from "../icons/maskGroup.png";

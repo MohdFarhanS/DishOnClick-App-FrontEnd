@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Image } from "react-native";
 import { saveUserData } from "../src/data/userStorage";
 
-import ArrowLeftIcon from "../icons/Arrow Left.png";
+import ArrowLeftIcon from "../icons/Arrow-Left.png";
 
 const SignUp = () => {
   const navigation = useNavigation();
