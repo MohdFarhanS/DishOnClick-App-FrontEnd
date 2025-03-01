@@ -16,7 +16,6 @@ const OrderHistory = ({ route }) => {
   const navigation = useNavigation();
   const [orders, setOrders] = useState([]);
 
-  // Handle direct navigation from HomeScreen
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
       try {
@@ -35,7 +34,7 @@ const OrderHistory = ({ route }) => {
   // Handle new order
   useEffect(() => {
     const handleNewOrder = async () => {
-      if (route.params?.newOrder) { // Hapus pengecekan isInitialLoad
+      if (route.params?.newOrder) {
         try {
           const savedOrders = await AsyncStorage.getItem('orders');
           let currentOrders = savedOrders ? JSON.parse(savedOrders) : [];

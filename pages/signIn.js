@@ -10,7 +10,6 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { getUserData } from "../src/data/userStorage";
 
-// Import gambar (pastikan path-nya sesuai)
 import ArrowLeftIcon from "../icons/Arrow-Left.png";
 import CoffeeRoastery from "../assets/coffeeRoastery.png";
 import Line2 from "../icons/Line2.png";
@@ -112,7 +111,6 @@ const styles = StyleSheet.create({
     top: 62,
     width: 214,
     alignitems: "center",
-    //   marginTop: 40
   },
   textWrapper4: {
     color: "#000000",
@@ -120,7 +118,6 @@ const styles = StyleSheet.create({
     color: "#5A4631",
     fontSize: 22,
     fontWeight: "400",
-    //   left: 18,
     position: "absolute",
     textAlign: "center",
     alignSelf: "center",
@@ -142,7 +139,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     color: "#5A4631",
-    //   left: 155,
     position: "absolute",
     top: 262,
   },
@@ -154,7 +150,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignSelf: "center",
     top: 309,
-    //   marginTop: 10
     padding: "",
   },
   textInput: {
@@ -162,7 +157,6 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-SemiBold",
     fontSize: 15,
     fontWeight: "600",
-    // padding: "0",
   },
   phoneInputContainer: {
     flexDirection: "row",
@@ -173,8 +167,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
     top: 358,
-    //   paddingHorizontal: 5
-    // paddingVertical:10
   },
   phoneInputWrapper: {
     flexDirection: "row",
@@ -188,10 +180,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
-    //   alignSelf: "center",
     right: 17,
     bottom: 5,
-    //   marginRight: 15,
   },
   textWrapper2: {
     color: "#000000",
@@ -201,7 +191,6 @@ const styles = StyleSheet.create({
     paddingTop: "",
     flex: 1,
     right: 17,
-    //   textAlign: "center",
     alignSelf: "center",
   },
   buttonAddToCart: {
@@ -212,16 +201,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     top: 400,
-    //   left: 40,
     width: 360,
-    //   padding: "auto",
   },
   textWrapper3: {
     color: "#ffffff",
     fontFamily: "Montserrat-SemiBold",
     fontSize: 20,
     fontWeight: "600",
-    //   padding: "auto"
   },
   line: {
     height: 1,
@@ -236,7 +222,6 @@ const styles = StyleSheet.create({
     width: 223,
     position: "absolute",
     top: 219,
-    //   left: 94,
   },
 });
 

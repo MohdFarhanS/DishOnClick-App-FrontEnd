@@ -42,7 +42,7 @@ const PaymentScreen = ({ navigation, route }) => {
     const newOrder = {
       orderId: generateOrderId(),
       date: new Date().toLocaleString(),
-      productName: orders[0].name, // Menggunakan data dari orders array
+      productName: orders[0].name,
       quantity: orders[0].quantity,
       price: orders[0].price,
       total: totalPayment,

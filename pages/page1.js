@@ -20,10 +20,10 @@ const Page1 = () => {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: "#E3D5CA", // Background halaman utama diubah menjadi E3D5CA
+    backgroundColor: "#E3D5CA",
     justifyContent: "center",
     alignItems: "center",
-    height: "100%", // Pastikan tinggi halaman penuh
+    height: "100%", 
   },
   overlap: {
     position: "absolute",
@@ -31,47 +31,47 @@ const styles = StyleSheet.create({
     width: 411,
     height: 473,
     textAlign: "center",
-    alignItems: "center", // Memusatkan elemen secara horizontal
-    justifyContent: "center", // Memusatkan elemen secara vertikal
-    flexDirection: "column", // Mengatur elemen menjadi vertikal
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
     flex: 1,
-    backgroundColor: "#E3D5CA", // Memberikan background E3D5CA pada overlap
+    backgroundColor: "#E3D5CA", 
   },
   overlapGroupWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    padding: 60, // Memberikan padding agar konten tidak terlalu rapat dengan tepi
+    padding: 60, 
 
-    justifyContent: "center", // Menjaga semua konten berada di tengah
-    backgroundColor: "#E3D5CA", // Background wrapper juga menggunakan E3D5CA
-    flex: 1, // Mengatur agar wrapper mengisi seluruh ruang yang ada
+    justifyContent: "center", 
+    backgroundColor: "#E3D5CA", 
+    flex: 1, 
   },
   overlapGroup: {
-    position: "relative", // Menggunakan positioning relatif
-    alignItems: "center", // Memusatkan semua elemen dalam overlapGroup
-    backgroundColor: "#E3D5CA", // Menambahkan background E3D5CA pada grup
-    paddingTop: 20, // Memberikan jarak antara konten dan bagian atas
+    position: "relative", 
+    alignItems: "center", 
+    backgroundColor: "#E3D5CA", 
+    paddingTop: 20,
   },
   elementCopy: {
-    width: 300, // Sesuaikan dengan ukuran gambar
-    height: 300, // Sesuaikan dengan ukuran gambar
-    resizeMode: "contain", // Memastikan gambar tampil proporsional
-    marginBottom: 10, // Memberikan jarak antara gambar dan teks
+    width: 300,
+    height: 300, 
+    resizeMode: "contain", 
+    marginBottom: 10, 
   },
   coffeeRoastery: {
-    width: 200, // Sesuaikan dengan ukuran gambar
-    height: 50, // Sesuaikan dengan ukuran gambar
-    resizeMode: "contain", // Memastikan gambar tampil proporsional
-    marginTop: 0, // Memberikan jarak antara gambar dan teks
+    width: 200, 
+    height: 50, 
+    resizeMode: "contain",
+    marginTop: 0, 
   },
   textWrapper: {
     fontSize: 25,
     fontWeight: "500",
-    color: "#000", // Warna teks tetap hitam, bisa disesuaikan
-    marginTop: 0, // Memberikan jarak antara gambar dan teks
-    backgroundColor: "#E3D5CA", // Memberikan background E3D5CA pada teks
-    paddingHorizontal: 0, // Memberikan padding agar teks tidak terlalu menempel di tepi
-    textAlign: "center", // Memastikan teks terpusat
+    color: "#000",
+    marginTop: 0, 
+    backgroundColor: "#E3D5CA",
+    paddingHorizontal: 0, 
+    textAlign: "center", 
   },
 });
 

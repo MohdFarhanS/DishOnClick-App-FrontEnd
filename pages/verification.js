@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   },
   resendContainer: {
     marginTop: 30,
-    padding: 10, // Menambah padding untuk area sentuh yang lebih besar
+    padding: 10, 
   },
   resendTextContainer: {
     flexDirection: 'row',

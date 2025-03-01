@@ -92,7 +92,6 @@ const Favorite = ({ navigation }) => {
             <TouchableOpacity
               key={item.id}
               style={styles.card}
-              // onPress={() => navigateToOrder(item)}
             >
               <Image
                 source={item.image}

@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   categoryItem: {
-    marginRight: 8, // Space between items
+    marginRight: 8,
   },
   categoryBox: {
     backgroundColor: "#ffffff",
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
   navIcons: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between", // Mengatur jarak antar icon secara merata
+    justifyContent: "space-between",
     paddingRight: 5,
   },
   iconButton: {

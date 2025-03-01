@@ -52,7 +52,7 @@ const SignUp = () => {
           {/* Back Button */}
           <TouchableOpacity
             style={styles.arrowLeft}
-            onPress={() => navigation.goBack()} // Kembali ke halaman sebelumnya
+            onPress={() => navigation.goBack()}
           >
             <Image source={ArrowLeftIcon} style={styles.arrowLeftImage} />
           </TouchableOpacity>
@@ -68,7 +68,7 @@ const SignUp = () => {
               style={styles.textInput}
               keyboardType="phone-pad"
               value={phone}
-              onChangeText={setPhone} // Menyimpan nilai input ke state
+              onChangeText={setPhone} 
               placeholder="Masukkan No Hp"
             />
           </View>
@@ -80,7 +80,7 @@ const SignUp = () => {
               keyboardType="email-address"
               autoCapitalize="none"
               value={email}
-              onChangeText={setEmail} // Menyimpan nilai input ke state
+              onChangeText={setEmail} 
               placeholder="Masukkan Email"
             />
           </View>
@@ -91,7 +91,7 @@ const SignUp = () => {
               style={styles.textInput}
               autoCapitalize="none"
               value={username}
-              onChangeText={setUsername} // Menyimpan nilai input ke state
+              onChangeText={setUsername} 
               placeholder="Masukkan Username"
             />
           </View>
@@ -101,12 +101,12 @@ const SignUp = () => {
             {/* Opsi Male */}
             <TouchableOpacity
               style={styles.genderOption}
-              onPress={() => handleGenderSelect("male")} // Panggil fungsi saat opsi dipilih
+              onPress={() => handleGenderSelect("male")} 
             >
               <View
                 style={[
                   styles.genderCircle,
-                  selectedGender === "male" && styles.selectedGenderCircle, // Tambahkan styling jika dipilih
+                  selectedGender === "male" && styles.selectedGenderCircle, 
                 ]}
               />
               <Text style={styles.genderLabel}>Male</Text>
@@ -115,12 +115,12 @@ const SignUp = () => {
             {/* Opsi Female */}
             <TouchableOpacity
               style={styles.genderOption}
-              onPress={() => handleGenderSelect("female")} // Panggil fungsi saat opsi dipilih
+              onPress={() => handleGenderSelect("female")} 
             >
               <View
                 style={[
                   styles.genderCircle,
-                  selectedGender === "female" && styles.selectedGenderCircle, // Tambahkan styling jika dipilih
+                  selectedGender === "female" && styles.selectedGenderCircle, 
                 ]}
               />
               <Text style={styles.genderLabel}>Female</Text>
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Regular",
   },
   form: {
-    flex: 1, // Membuat form mengisi ruang yang tersisa
+    flex: 1, 
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,

@@ -189,7 +189,7 @@ const OrderScreen = ({ navigation, route }) => {
                 selectedSugar: sugarLevel,
                 quantity: quantity,
                 totalPrice: totalPrice,
-                orderDate: new Date().toISOString() // Tambahkan tanggal pesanan
+                orderDate: new Date().toISOString()
               }
             })}            
           >
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   scrollViewContent: {
-    paddingBottom: 100, // Increased padding to prevent content from being hidden behind the button
+    paddingBottom: 100,
   },
   heartButtonActive: {
     backgroundColor: "rgba(255,255,255,0.9)",

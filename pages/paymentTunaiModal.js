@@ -12,8 +12,8 @@ const PaymentTunaiModal = ({
   const handleViewOrder = () => {
     const orderDetailsWithId = {
       ...orderDetails,
-      orderId: Date.now().toString(), // Menambahkan orderId unik
-      date: new Date().toLocaleDateString(), // Tambahkan tanggal
+      orderId: Date.now().toString(), 
+      date: new Date().toLocaleDateString(),
     };
     onClose();
     setTimeout(() => {

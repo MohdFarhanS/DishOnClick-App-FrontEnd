@@ -107,7 +107,7 @@ const OrderSummary = ({ navigation, route }) => {
               selectedSize: product?.selectedSize,
               selectedSugar: product?.selectedSugar,
               orderDate: new Date().toISOString(),
-              status: "Diproses", // Tambahkan status pesanan
+              status: "Diproses",
             },
           })
         }

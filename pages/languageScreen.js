@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const LanguageScreen = () => {
   const navigation = useNavigation();
-  const [selectedLanguage, setSelectedLanguage] = useState('english'); // Default language
+  const [selectedLanguage, setSelectedLanguage] = useState('english');
 
   const languages = [
     { id: 'indonesia', label: 'Bahasa Indonesia' },
@@ -20,8 +20,6 @@ const LanguageScreen = () => {
 
   const handleLanguageSelect = (languageId) => {
     setSelectedLanguage(languageId);
-    // Tambahkan logika untuk menyimpan bahasa yang dipilih
-    // misalnya menggunakan AsyncStorage
   };
 
   return (
